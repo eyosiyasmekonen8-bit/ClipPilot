@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090d18">
+<meta name="description" content="ClipPilot V2 — a free-first video clipping workspace.">
+<title>ClipPilot V2 — AI Clipping Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#090d18;--panel:#121a2b;--panel2:#18243a;--line:#293650;--muted:#9aa9c2;--text:#f5f7ff;--blue:#6d8cff;--cyan:#48d9d0;--green:#45d49a;--red:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#24345c 0,transparent 60%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1100px;margin:auto;padding:20px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 0 22px}.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:850}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:#07101b;font-weight:900}.tag,.pill{font-size:11px;font-weight:800;letter-spacing:.08em;border:1px solid #385174;color:#b9ccff;border-radius:99px;padding:5px 9px}.hero{padding:22px 0 18px}.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}h1{font-size:clamp(28px,6vw,46px);line-height:1.05;margin:9px 0}p{color:var(--muted);line-height:1.55}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.card{background:linear-gradient(160deg,#172238,#101827);border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0;margin-bottom:16px}.card h2{font-size:17px;margin:0 0 12px}.drop{border:1px dashed #52688e;border-radius:14px;padding:20px;text-align:center;background:#0d1524}.drop input{max-width:100%;margin-top:12px}.videoBox{margin-top:14px;background:#050811;border-radius:14px;overflow:hidden;min-height:180px;display:grid;place-items:center}.videoBox video{display:block;width:100%;max-height:440px;background:#050811}.empty{padding:28px;color:#8494ae;text-align:center}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field input[type=range]{width:100%;accent-color:var(--blue)}.time{font-variant-numeric:tabular-nums;color:var(--cyan);font-size:12px}.btn{border:0;border-radius:11px;padding:12px 15px;background:linear-gradient(135deg,var(--blue),#5571db);color:white;font-weight:800;cursor:pointer}.btn.secondary{background:#24334d;border:1px solid #3b4d6b}.btn.green{background:linear-gradient(135deg,#2cb987,#168b78)}.btn:disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.status{font-size:12px;color:var(--muted);min-height:20px;margin-top:10px}.status.good{color:var(--green)}.status.warn{color:#ffd27c}.suggestions{display:grid;gap:9px}.suggestion{border:1px solid var(--line);background:#101a2a;border-radius:12px;padding:12px}.suggestion strong{display:block;margin-bottom:5px}.suggestion small{color:var(--muted)}.suggestion button{margin-top:9px}.notice{font-size:12px;border-left:3px solid #d4a64e;padding:9px 11px;background:#211d16;color:#f2d59c;border-radius:0 9px 9px 0}.feature{display:flex;gap:10px;align-items:flex-start;padding:8px 0;color:#d9e2f3}.feature b{color:var(--cyan)}.platforms{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.platforms span{font-size:12px;background:#202d43;border:1px solid #344763;border-radius:8px;padding:6px 9px;color:#c8d5eb}.foot{text-align:center;font-size:12px;color:#73839d;padding:14px}
+@media(max-width:760px){.wrap{padding:14px}.grid{grid-template-columns:1fr}.card{padding:15px}.controls{grid-template-columns:1fr 1fr}.hero{padding-top:10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand"><div class="logo">▶</div>ClipPilot <span class="tag">V2 STUDIO</span></div><span class="pill">FREE-FIRST BUILD</span></header>
+<section class="hero"><div class="eyebrow">Create more from every video</div><h1>Find the moment.<br><span style="color:var(--cyan)">Make the clip.</span></h1><p>Upload a video, choose a moment, shape it for short-form platforms, and export it from your browser.</p></section>
+<div class="grid">
+<main>
+<section class="card">
+<h2>01 / Your video</h2>
+<div class="drop"><b>Choose a video from your device</b><br><span style="color:var(--muted);font-size:12px">MP4, WebM and other browser-supported formats</span><br><input id="file" type="file" accept="video/*"></div>
+<div class="videoBox" id="videoBox"><div class="empty">Your video preview will appear here.</div><video id="video" controls playsinline hidden></video></div>
+<div class="controls">
+<div class="field"><label for="start">CLIP START <span class="time" id="startTime">00:00</span></label><input id="start" type="range" min="0" max="1" step=".1" value="0"></div>
+<div class="field"><label for="end">CLIP END <span class="time" id="endTime">00:00</span></label><input id="end" type="range" min="0" max="1" step=".1" value="1"></div>
+</div>
+<div class="field" style="margin-top:12px"><label for="format">OUTPUT FORMAT</label><select id="format" style="width:100%;padding:11px;border-radius:10px;background:#0d1524;color:white;border:1px solid var(--line)"><option value="original">Original landscape / source ratio</option><option value="vertical">Vertical 9:16 (shorts / reels)</option><option value="square">Square 1:1</option></select></div>
+<div class="actions"><button class="btn" id="preview" disabled>Preview selection</button><button class="btn secondary" id="reset" disabled>Reset trim</button><button class="btn green" id="export" disabled>Export clip</button></div>
+<div class="status" id="editStatus" role="status"></div>
+</section>
+<section class="card">
+<h2>02 / AI highlight studio</h2>
+<p style="margin-top:-5px">Analyze your uploaded video to find sections worth reviewing.</p>
+<div class="notice">AI engine connection is not active yet. This first V2 build uses on-device audio-energy analysis as a free assistive signal — it is not semantic AI and does not understand speech or story context.</div>
+<div class="actions"><button class="btn" id="analyze" disabled>Analyze video</button></div>
+<div class="status" id="analysisStatus" role="status"></div>
+<div class="suggestions" id="suggestions"><div class="empty">Upload a video to begin analysis.</div></div>
+</section>
+</main>
+<aside>
+<section class="card">
+<h2>03 / Social source</h2>
+<p style="margin-top:-5px">Identify a supported public video link. Platform restrictions mean links are not downloaded automatically.</p>
+<input id="socialUrl" type="url" placeholder="Paste TikTok, Instagram, Facebook or YouTube URL" style="width:100%;padding:12px;border-radius:10px;background:#0d1524;color:white;border:1px solid var(--line)">
+<div class="actions"><button class="btn secondary" id="checkLink">Check link</button></div>
+<div class="status" id="linkStatus" role="status"></div>
+<div class="platforms"><span>TikTok</span><span>Instagram</span><span>Facebook</span><span>YouTube</span></div>
+</section>
+<section class="card">
+<h2>What's in this build</h2>
+<div class="feature"><b>✓</b><span>Local video preview and trim controls</span></div>
+<div class="feature"><b>✓</b><span>Audio-energy highlight suggestions</span></div>
+<div class="feature"><b>✓</b><span>Landscape, vertical and square export framing</span></div>
+<div class="feature"><b>✓</b><span>Browser-based export where MediaRecorder is supported</span></div>
+<div class="feature"><b>Next</b><span>Connect a secure AI backend for genuine transcript-aware highlight detection and automatic captions.</span></div>
+</section>
+<section class="card">
+<h2>Privacy-first</h2><p>Your uploaded video is processed locally in this browser in this build. It is not sent to a server by this page.</p>
+</section>
+</aside>
+</div>
+<div class="foot">ClipPilot V2 · Free-first creator tools · Built for the browser</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const video=$('video'),file=$('file'),start=$('start'),end=$('end');
+let objectUrl=null, duration=0, recording=false, stopAt=0, audioContext=null;
+const fmt=n=>{n=Math.max(0,Math.floor(Number(n)||0));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')};
+const status=(id,msg,kind='')=>{$(id).textContent=msg;$(id).className='status '+kind};
+function updateTimes(){$('startTime').textContent=fmt(start.value);$('endTime').textContent=fmt(end.value)}
+function setRange(a,b){start.value=Math.max(0,Math.min(duration,a));end.value=Math.max(Number(start.value)+.2,Math.min(duration,b));updateTimes()}
+function syncRanges(){if(+start.value>=+end.value)end.value=Math.min(duration,+start.value+.2);if(+end.value<=+start.value)start.value=Math.max(0,+end.value-.2);updateTimes()}
+file.addEventListener('change',()=>{
+ const f=file.files&&file.files[0];if(!f)return;
+ if(objectUrl)URL.revokeObjectURL(objectUrl);
+ objectUrl=URL.createObjectURL(f);video.src=objectUrl;video.hidden=false;
+ $('videoBox').querySelector('.empty')?.remove();
+ video.onloadedmetadata=()=>{
+  duration=video.duration;start.max=duration;end.max=duration;start.step=end.step='.1';
+  start.value=0;end.value=duration;syncRanges();
+  ['preview','reset','export','analyze'].forEach(id=>$(id).disabled=false);
+  status('editStatus',`Loaded ${f.name} · ${fmt(duration)} long`,'good');
+  status('analysisStatus','Ready for on-device audio analysis.');
+ };
+});
+start.addEventListener('input',syncRanges);end.addEventListener('input',syncRanges);
+$('reset').onclick=()=>{setRange(0,duration);video.currentTime=0;status('editStatus','Trim reset.')};
+$('preview').onclick=async()=>{video.currentTime=+start.value;try{await video.play();status('editStatus','Previewing selected clip.')}catch(e){status('editStatus','Tap play on the video preview to start.')}};
+video.addEventListener('timeupdate',()=>{if(recording&&video.currentTime>=stopAt)video.pause()});
+async function analyze(){
+ if(!video.src||!duration)return;
+ $('analyze').disabled=true;status('analysisStatus','Reading audio energy locally…');
+ try{
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const response=await fetch(objectUrl),buffer=await response.arrayBuffer();
+  const decoded=await ctx.decodeAudioData(buffer);
+  const channel=decoded.getChannelData(0),sr=decoded.sampleRate;
+  const windowSec=1, samples=Math.floor(sr*windowSec), values=[];
+  for(let offset=0;offset<channel.length;offset+=samples){
+   let sum=0,n=Math.min(samples,channel.length-offset);
+   for(let i=0;i<n;i+=4)sum+=channel[offset+i]*channel[offset+i];
+   values.push({t:offset/sr,energy:Math.sqrt(sum/Math.max(1,Math.ceil(n/4)))});
+  }
+  const sorted=values.map(v=>v.energy).sort((a,b)=>a-b);
+  const threshold=sorted[Math.floor(sorted.length*.65)]||0;
+  let peaks=values.filter(v=>v.energy>=threshold&&v.t<duration-5);
+  peaks.sort((a,b)=>b.energy-a.energy);
+  const chosen=[];
+  for(const p of peaks){if(chosen.every(x=>Math.abs(x.t-p.t)>12))chosen.push(p);if(chosen.length>=6)break}
+  chosen.sort((a,b)=>a.t-b.t);
+  const host=$('suggestions');host.innerHTML='';
+  if(!chosen.length){host.innerHTML='<div class="empty">No clear audio peaks found. Try a video with speech or sound.</div>'}
+  chosen.forEach((p,i)=>{
+   const a=Math.max(0,p.t-8),b=Math.min(duration,p.t+12);
+   const el=document.createElement('div');el.className='suggestion';
+   const title=document.createElement('strong');title.textContent=`Audio activity ${i+1} · ${fmt(p.t)}`;
+   const detail=document.createElement('small');detail.textContent=`Suggested review window: ${fmt(a)}–${fmt(b)}. Higher audio energy, not an AI understanding of the content.`;
+   const btn=document.createElement('button');btn.className='btn secondary';btn.textContent='Use this section';
+   btn.onclick=()=>{setRange(a,b);video.currentTime=a;status('editStatus','Suggested section selected.')};
+   el.append(title,detail,document.createElement('br'),btn);host.append(el);
+  });
+  status('analysisStatus',`Analysis complete. ${chosen.length} audio-active sections found. These are heuristic suggestions, not AI-selected viral moments.`,'good');
+  await ctx.close();
+ }catch(e){status('analysisStatus','Could not analyze this file’s audio in this browser. Try another video format.','warn')}
+ $('analyze').disabled=false;
+}
+$('analyze').onclick=analyze;
+$('checkLink').onclick=()=>{
+ let raw=$('socialUrl').value.trim(),u;
+ try{u=new URL(raw)}catch(e){status('linkStatus','Enter a valid full URL first.','warn');return}
+ const h=u.hostname.toLowerCase().replace(/^www\./,'');
+ let platform='';
+ if(h==='tiktok.com'||h.endsWith('.tiktok.com'))platform='TikTok';
+ else if(h==='instagram.com'||h.endsWith('.instagram.com'))platform='Instagram';
+ else if(h==='facebook.com'||h.endsWith('.facebook.com')||h==='fb.watch')platform='Facebook';
+ else if(h==='youtube.com'||h.endsWith('.youtube.com')||h==='youtu.be')platform='YouTube';
+ status('linkStatus',platform?`${platform} link recognized. Download or upload the video through an authorized method, then choose it above.`:'This platform is not recognized.','good');
+};
+function canvasStream(){
+ const mode=$('format').value,canvas=document.createElement('canvas');
+ let w=1280,h=720;
+ if(mode==='vertical'){w=720;h=1280}else if(mode==='square'){w=720;h=720}
+ canvas.width=w;canvas.height=h;
+ const c=canvas.getContext('2d');
+ const draw=()=>{
+  if(video.readyState>=2){
+   c.fillStyle='#000';c.fillRect(0,0,w,h);
+   const scale=Math.max(w/video.videoWidth,h/video.videoHeight);
+   const dw=video.videoWidth*scale,dh=video.videoHeight*scale;
+   c.drawImage(video,(w-dw)/2,(h-dh)/2,dw,dh);
+  }
+  if(recording)requestAnimationFrame(draw);
+ };
+ recording=true;draw();
+ return canvas.captureStream(30);
+}
+$('export').onclick=async()=>{
+ if(!video.src||!window.MediaRecorder){status('editStatus','Video export is not supported in this browser.','warn');return}
+ const a=+start.value,b=+end.value;if(b-a<.3){status('editStatus','Choose a clip at least 0.3 seconds long.','warn');return}
+ const stream=canvasStream(),chunks=[];
+ try{
+  const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(x=>MediaRecorder.isTypeSupported(x))||'';
+  const rec=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);
+  rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  rec.onstop=()=>{
+   recording=false;stream.getTracks().forEach(t=>t.stop());
+   const blob=new Blob(chunks,{type:rec.mimeType||'video/webm'}),url=URL.createObjectURL(blob);
+   const link=document.createElement('a');link.href=url;link.download=`clippilot-${Date.now()}.webm`;link.click();
+   setTimeout(()=>URL.revokeObjectURL(url),60000);
+   status('editStatus','Export ready. Check your Downloads folder.','good');
+  };
+  video.currentTime=a;await video.play();rec.start(250);stopAt=b;
+  status('editStatus','Exporting clip… keep this tab open.');
+  video.onpause=()=>{if(recording){rec.stop();video.onpause=null}};
+ }catch(e){recording=false;stream.getTracks().forEach(t=>t.stop());status('editStatus','Export failed. Try Chrome and keep this tab open.','warn')}
+};
+})();
+</script>
+</body>
+</html>
