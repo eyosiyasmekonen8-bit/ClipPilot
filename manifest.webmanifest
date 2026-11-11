@@ -1,0 +1,10 @@
+{
+  "name": "ClipPilot",
+  "short_name": "ClipPilot",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0e16",
+  "theme_color": "#10131d",
+  "description": "A free-first mobile video clipping workspace.",
+  "icons": []
+}

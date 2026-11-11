@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10131d">
+  <meta name="description" content="ClipPilot — a free-first video clipping workspace.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>ClipPilot — Make the moment</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b0e16;--panel:#141927;--panel2:#1b2233;--line:#293248;--muted:#9ba6bd;--text:#f5f7ff;--lime:#b8ef62;--purple:#a88bff}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#242344 0%,transparent 60%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    button,input{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:12px 16px;font-weight:750;background:var(--lime);color:#141a10}
+    button.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}button:disabled{opacity:.45;cursor:not-allowed}
+    .wrap{max-width:1050px;margin:auto;padding:24px 18px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:28px}
+    .brand{display:flex;align-items:center;gap:11px;font-size:22px;font-weight:900;letter-spacing:-.7px}.logo{width:39px;height:39px;border-radius:13px;background:var(--lime);color:#15200b;display:grid;place-items:center;font-weight:1000;font-size:20px}
+    .tag{font-size:12px;color:var(--lime);border:1px solid #526b37;border-radius:99px;padding:5px 9px}
+    h1{font-size:clamp(32px,6vw,54px);line-height:1.03;letter-spacing:-2px;margin:0 0 12px}.hero{margin:18px 0 26px}.hero p{color:var(--muted);max-width:620px;margin:0}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.card{background:linear-gradient(160deg,#171e2d,#111622);border:1px solid var(--line);border-radius:20px;padding:18px;min-width:0}
+    .card h2{font-size:17px;margin:0 0 13px}.muted{color:var(--muted)}.upload{border:1px dashed #526078;background:#101522;border-radius:15px;padding:20px;text-align:center}
+    input[type=file]{max-width:100%;color:var(--muted)}.video-wrap{margin-top:14px;background:#05070b;border-radius:15px;overflow:hidden;aspect-ratio:16/9;display:grid;place-items:center}
+    video{width:100%;height:100%;max-height:480px;object-fit:contain;background:#05070b}.placeholder{color:#77839a;text-align:center;padding:20px}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input{width:100%;accent-color:var(--lime)}
+    .times{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+    .suggestions{display:grid;gap:9px}.suggestion{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border:1px solid var(--line);background:#111725;border-radius:13px}.suggestion strong{display:block}.suggestion small{color:var(--muted)}
+    .linkbox{display:flex;gap:8px;margin-top:10px}.linkbox input{min-width:0;flex:1;background:#0d1320;border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text)}
+    .platforms{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.platform{font-size:12px;padding:6px 9px;border-radius:99px;background:#20283a;color:#d4d9e6}
+    .notice{font-size:12px;color:var(--muted);margin-top:12px}.status{min-height:22px;color:var(--lime);font-size:13px;margin-top:10px}.full{width:100%;margin-top:12px}
+    footer{color:#78849b;font-size:12px;text-align:center;margin-top:25px}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:17px 13px 35px}.top{margin-bottom:20px}.card{padding:15px}.hero{margin-top:8px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><div class="brand"><div class="logo">C</div>ClipPilot</div><span class="tag">FREE STARTER · V1</span></header>
+  <section class="hero"><h1>Make the moment.<br><span style="color:var(--lime)">Clip it.</span></h1><p>A simple, phone-friendly workspace to find moments, trim videos and export clips. Your videos stay on your device.</p></section>
+  <main class="grid">
+    <section class="card">
+      <h2>01 / Your video</h2>
+      <div class="upload"><p style="margin:0 0 10px"><strong>Choose a video from your device</strong></p><input id="file" type="file" accept="video/*"><div class="notice">MP4 and other browser-supported video formats work best.</div></div>
+      <div class="video-wrap" id="videoWrap"><div class="placeholder">Your video preview will appear here</div><video id="video" controls playsinline hidden></video></div>
+      <div class="controls">
+        <div class="field"><label for="start">CLIP START</label><input id="start" type="range" min="0" max="0" step=".1" value="0"><div class="times"><span id="startTime">0:00</span><span>IN</span></div></div>
+        <div class="field"><label for="end">CLIP END</label><input id="end" type="range" min="0" max="0" step=".1" value="0"><div class="times"><span id="endTime">0:00</span><span>OUT</span></div></div>
+      </div>
+      <div class="actions"><button id="preview" disabled>▶ Preview selection</button><button class="secondary" id="reset" disabled>Reset trim</button></div>
+      <button class="full" id="export" disabled>Export selected clip ↗</button>
+      <div class="status" id="editStatus" role="status"></div>
+    </section>
+    <aside class="card">
+      <h2>02 / Find a moment</h2>
+      <p class="muted" style="margin-top:-5px">Create quick starter suggestions from different sections of your video.</p>
+      <div class="suggestions" id="suggestions"><div class="placeholder">Upload a video to generate clip suggestions.</div></div>
+      <h2 style="margin-top:24px">03 / Social link</h2>
+      <p class="muted" style="margin-top:-5px">Recognize a link and keep track of its source.</p>
+      <div class="linkbox"><input id="socialUrl" type="url" placeholder="Paste a TikTok, Instagram, Facebook or YouTube link"><button id="checkLink">Check</button></div>
+      <div class="platforms"><span class="platform">TikTok</span><span class="platform">Instagram</span><span class="platform">Facebook</span><span class="platform">YouTube</span></div>
+      <div class="status" id="linkStatus" role="status"></div>
+      <p class="notice">Social links are recognized only. This starter does not download or extract videos from social platforms. Upload a video file you own or are allowed to edit.</p>
+    </aside>
+  </main>
+  <footer>ClipPilot · Free-first creator tools · V1 runs locally in your browser</footer>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const video=$('video'), file=$('file'), start=$('start'), end=$('end');
+  let objectUrl=null, recording=false, stopAt=0;
+  const fmt = n => {n=Math.max(0,Math.floor(Number(n)||0));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')};
+  const setStatus=(id,msg)=>$(id).textContent=msg;
+  function updateTimes(){ $('startTime').textContent=fmt(start.value);$('endTime').textContent=fmt(end.value); }
+  function setRange(a,b){const d=video.duration||0;start.value=Math.max(0,Math.min(a,d));end.value=Math.max(Number(start.value)+.2,Math.min(b,d));if(Number(end.value)>d)end.value=d;updateTimes();}
+  function syncRanges(){if(+start.value>=+end.value)end.value=Math.min(+start.value+.2,+end.max);if(+end.value<=+start.value)start.value=Math.max(0,+end.value-.2);updateTimes();}
+  file.addEventListener('change',()=>{
+    const f=file.files[0];if(!f)return;
+    if(objectUrl)URL.revokeObjectURL(objectUrl);
+    objectUrl=URL.createObjectURL(f);video.src=objectUrl;video.hidden=false;
+    $('videoWrap').querySelector('.placeholder')?.remove();
+    video.onloadedmetadata=()=>{
+      const d=video.duration;start.max=end.max=d;start.step=end.step='.1';start.value=0;end.value=d;
+      ['preview','reset','export'].forEach(id=>$(id).disabled=false);
+      updateTimes();makeSuggestions(d);setStatus('editStatus',`Loaded ${f.name} · ${fmt(d)} long`);
+    };
+  });
+  function makeSuggestions(d){
+    const host=$('suggestions');host.innerHTML='';
+    if(!d||!isFinite(d)){host.textContent='Could not read video duration.';return;}
+    const count=Math.min(4,Math.max(1,Math.ceil(d/25)));
+    for(let i=0;i<count;i++){
+      const a=d*i/count,b=Math.min(d,a+Math.min(20,d/count));
+      const el=document.createElement('div');el.className='suggestion';
+      const info=document.createElement('div');info.innerHTML=`<strong>Suggested clip ${i+1}</strong><small>${fmt(a)} – ${fmt(b)} · ${fmt(b-a)}</small>`;
+      const btn=document.createElement('button');btn.className='secondary';btn.textContent='Use clip';
+      btn.addEventListener('click',()=>{setRange(a,b);video.currentTime=a;setStatus('editStatus',`Selected suggestion ${i+1}.`);});
+      el.append(info,btn);host.append(el);
+    }
+  }
+  start.addEventListener('input',syncRanges);end.addEventListener('input',syncRanges);
+  $('reset').addEventListener('click',()=>{setRange(0,video.duration);video.currentTime=0;});
+  $('preview').addEventListener('click',async()=>{video.pause();video.currentTime=+start.value;try{await video.play();}catch(e){setStatus('editStatus','Tap play on the video to preview.');}});
+  video.addEventListener('timeupdate',()=>{if(recording&&video.currentTime>=stopAt){video.pause();}});
+  $('checkLink').addEventListener('click',()=>{
+    const raw=$('socialUrl').value.trim();let u;
+    try{u=new URL(raw);}catch(e){setStatus('linkStatus','Enter a valid full URL first.');return;}
+    const h=u.hostname.toLowerCase().replace(/^www\./,'');
+    let platform='';
+    if(h==='tiktok.com'||h.endsWith('.tiktok.com'))platform='TikTok';
+    else if(h==='instagram.com'||h.endsWith('.instagram.com'))platform='Instagram';
+    else if(h==='facebook.com'||h.endsWith('.facebook.com')||h==='fb.watch')platform='Facebook';
+    else if(h==='youtube.com'||h.endsWith('.youtube.com')||h==='youtu.be')platform='YouTube';
+    setStatus('linkStatus',platform?`${platform} link recognized ✓ · Upload the video file separately to edit it.`:'That link is not from one of the four supported platforms.');
+  });
+  $('export').addEventListener('click',async()=>{
+    if(!video.src||!video.captureStream||!window.MediaRecorder){setStatus('editStatus','Video export is not supported in this browser. Try the latest Chrome.');return;}
+    const a=+start.value,b=+end.value;if(b-a<.3){setStatus('editStatus','Choose a clip at least 0.3 seconds long.');return;}
+    const stream=video.captureStream();let chunks=[];
+    let mime=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(x=>MediaRecorder.isTypeSupported(x))||'';
+    let recorder;try{recorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});}catch(e){setStatus('editStatus','Could not start export in this browser.');return;}
+    recording=true;stopAt=b;video.pause();video.currentTime=a;
+    recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+    recorder.onstop=()=>{
+      recording=false;stream.getTracks().forEach(t=>t.stop());
+      const blob=new Blob(chunks,{type:recorder.mimeType||'video/webm'}),url=URL.createObjectURL(blob),link=document.createElement('a');
+      link.href=url;link.download=`clippilot-${Date.now()}.webm`;document.body.appendChild(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),60000);setStatus('editStatus','Export ready ✓ Check your Downloads folder.');
+    };
+    video.onended=()=>{if(recording)recorder.stop();};
+    try{await video.play();recorder.start(250);setStatus('editStatus','Exporting clip… keep this tab open.');}catch(e){recording=false;setStatus('editStatus','Tap play permission, then try exporting again.');}
+    const watcher=()=>{if(recording&&video.currentTime>=stopAt){video.pause();if(recorder.state!=='inactive')recorder.stop();}else if(recording)requestAnimationFrame(watcher);};requestAnimationFrame(watcher);
+  });
+  if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>
